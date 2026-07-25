@@ -29,3 +29,14 @@ sendBtn.addEventListener("click", () => {
     prompt.value="";
 
 });
+const response = document.getElementById("response");
+
+sendBtn.addEventListener("click", () => {
+
+    const text = prompt.value;
+
+    response.innerHTML =
+        "🤖 SUPER BEEM : I received your command.<br><br>" +
+        "Command : <b>" + text + "</b><br><br>" +
+        "Status : Processing...";
+});
