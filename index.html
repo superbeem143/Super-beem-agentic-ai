@@ -1,82 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUPER BEEM</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUPER BEEM AI</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#111;
+    color:white;
+}
+header{
+    background:#ff9800;
+    padding:15px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+}
+#chat{
+    height:70vh;
+    overflow:auto;
+    padding:15px;
+}
+.user{
+    text-align:right;
+    margin:10px;
+    color:#00e5ff;
+}
+.bot{
+    text-align:left;
+    margin:10px;
+    color:#7CFC00;
+}
+.bottom{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#222;
+}
+input{
+    flex:1;
+    padding:15px;
+    border:none;
+    font-size:16px;
+}
+button{
+    padding:15px;
+    border:none;
+    background:#ff9800;
+    color:white;
+    font-size:16px;
+}
+</style>
+
 </head>
+
 <body>
 
-<header>
-  <div class="logo">
-    🤖 <span>SUPER BEEM</span>
-  </div>
+<header>🤖 SUPER BEEM AI</header>
 
-  <div class="status">
-    <span class="online"></span>
-    ONLINE
-  </div>
-</header>
+<div id="chat"></div>
 
-<main>
-
-  <section class="chat-panel">
-
-    <h2>SUPER BEEM</h2>
-
-    <div id="chatBox">
-<div id="response" class="response">
-    SUPER BEEM Ready...
+<div class="bottom">
+<input id="msg" placeholder="Ask anything...">
+<button onclick="send()">Send</button>
 </div>
-      <div class="bot">
-        👋 Hello Boss!
-      </div>
 
-      <div class="bot">
-        I am SUPER BEEM.
-      </div>
+<script>
 
-      <div class="bot">
-        Ready for your command...
-      </div>
+const SERVER="https://super-beem-server.onrender.com/chat";
 
-    </div>
+async function send(){
 
-    <div class="input-area">
-
-      <input
-        id="prompt"
-        type="text"
-        placeholder="Type your command..."
-      >
-
-      <button id="sendBtn">
-        Send
-      </button>
-
-    </div>
-
-  </section>
-
-  <section class="side-panel">
-
-    <h3>Agent Status</h3>
-<ul>
-  <li>🟢 AI Brain : Ready</li>
-  <li>🌐 Internet : Offline</li>
-  <li>🧠 Brain : Online</li>
-  <li>📂 Project : Ready</li>
-  <li>⚡ Agent : Idle</li>
-  <li>💻 GitHub : Not Connected</li>
-  <li>🔥 Firebase : Not Connected</li>
-</ul>
-
-  </section>
-
-</main>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+const input=document.getElementById("msg  
