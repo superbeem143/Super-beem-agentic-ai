@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SUPER BEEM AI</title>
 
 <style>
@@ -18,14 +17,14 @@ font-family:Arial,sans-serif;
 body{
 background:#111;
 color:white;
+height:100vh;
 display:flex;
 flex-direction:column;
-height:100vh;
 }
 
 header{
 background:#ff9800;
-padding:15px;
+padding:18px;
 text-align:center;
 font-size:24px;
 font-weight:bold;
@@ -35,32 +34,27 @@ font-weight:bold;
 flex:1;
 overflow-y:auto;
 padding:15px;
+display:flex;
+flex-direction:column;
+gap:12px;
 }
 
 .user{
-display:flex;
-justify-content:flex-end;
-margin:10px 0;
-}
-
-.user span{
-background:#2196F3;
-padding:12px;
-border-radius:12px;
+align-self:flex-end;
+background:#2196f3;
+padding:12px 16px;
+border-radius:18px 18px 0 18px;
 max-width:80%;
+word-wrap:break-word;
 }
 
 .bot{
-display:flex;
-justify-content:flex-start;
-margin:10px 0;
-}
-
-.bot span{
+align-self:flex-start;
 background:#333;
-padding:12px;
-border-radius:12px;
+padding:12px 16px;
+border-radius:18px 18px 18px 0;
 max-width:80%;
+word-wrap:break-word;
 }
 
 .bottom{
@@ -72,21 +66,25 @@ background:#222;
 #msg{
 flex:1;
 padding:14px;
-font-size:16px;
 border:none;
 outline:none;
 border-radius:8px;
+font-size:16px;
 }
 
 button{
 margin-left:8px;
-padding:14px 20px;
+padding:14px 18px;
 background:#ff9800;
 border:none;
 color:white;
 font-size:16px;
 border-radius:8px;
 cursor:pointer;
+}
+
+button:hover{
+background:#ffb300;
 }
 
 </style>
@@ -111,62 +109,28 @@ placeholder="Ask anything...">
 
 </div>
 
-<script> 
-function startVoice(){
+<script>
 
-const recognition =
-new (window.SpeechRecognition ||
-window.webkitSpeechRecognition)();
+const SERVER="https://super-beem-server.onrender.com/chat";
 
-recognition.lang = "en-US";
-// తెలుగు కావాలంటే:
-// recognition.lang = "te-IN";
+const chat=document.getElementById("chat");
+const input=document.getElementById("msg");async function send(){
 
-recognition.start();
-
-recognition.onresult = function(event){
-
-document.getElementById("msg").value =
-event.results[0][0].transcript;
-
-send();
-
-};
-
-recognition.onerror = function(){
-
-alert("Microphone permission denied or browser doesn't support voice.");
-
-};
-
-}
-
-const SERVER =
-"https://super-beem-server.onrender.com/chat";
-
-const chat =
-document.getElementById("chat");
-
-const input =
-document.getElementById("msg");
-
-async function send(){
-
-const message =
-input.value.trim();
+const message=input.value.trim();
 
 if(message==="") return;
 
-chat.innerHTML +=
-`<div class="user"><span>${message}</span></div>`;
+chat.innerHTML+=`
+<div class="user">${message}</div>
+`;
 
-chat.scrollTop = chat.scrollHeight;
+chat.scrollTop=chat.scrollHeight;
 
-input.value = "";
+input.value="";
 
 try{
 
-const res = await fetch(SERVER,{
+const res=await fetch(SERVER,{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -176,42 +140,34 @@ message:message
 })
 });
 
-const data = await res.json();
-    chat.innerHTML +=
-`<div class="bot"><span>${data.reply}</span></div>`;
+const data=await res.json();
 
-chat.scrollTop = chat.scrollHeight;
+chat.innerHTML+=`
+<div class="bot">${data.reply}</div>
+`;
+
+chat.scrollTop=chat.scrollHeight;
 
 // AI Voice Reply
-const speech =
-new SpeechSynthesisUtterance(data.reply);
-
-speech.lang = "en-US";
-speech.rate = 1;
-speech.pitch = 1;
-
-speechSynthesis.cancel();
+const speech=new SpeechSynthesisUtterance(data.reply);
+speech.lang="en-US";
 speechSynthesis.speak(speech);
 
 }catch(err){
 
-chat.innerHTML +=
-`<div class="bot"><span>❌ ${err.message}</span></div>`;
-
-chat.scrollTop = chat.scrollHeight;
+chat.innerHTML+=`
+<div class="bot">❌ ${err.message}</div>
+`;
 
 }
 
 }
 
 input.addEventListener("keypress",function(e){
-
 if(e.key==="Enter"){
 send();
 }
-
 });
-```javascript
 function startVoice(){
 
 const SpeechRecognition =
@@ -219,23 +175,28 @@ window.SpeechRecognition ||
 window.webkitSpeechRecognition;
 
 if(!SpeechRecognition){
-alert("Voice recognition is not supported in this browser.");
+alert("Voice recognition is not supported.");
 return;
 }
 
 const recognition = new SpeechRecognition();
 
-recognition.lang = "en-US"; // Telugu అయితే "te-IN"
+recognition.lang = "en-US"; // Telugu కోసం "te-IN"
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
 recognition.onresult = function(event){
+
 input.value = event.results[0][0].transcript;
+
 send();
+
 };
 
 recognition.onerror = function(event){
+
 alert("Voice Error: " + event.error);
+
 };
 
 recognition.start();
@@ -244,5 +205,5 @@ recognition.start();
 </script>
 
 </body>
-</html>
-```    
+</html>    
+
