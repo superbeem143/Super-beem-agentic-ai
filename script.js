@@ -40,3 +40,24 @@ sendBtn.addEventListener("click", () => {
         "Command : <b>" + text + "</b><br><br>" +
         "Status : Processing...";
 });
+function startVoice() {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Voice recognition is not supported in this browser.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US"; // Telugu కోసం "te-IN"
+  recognition.interimResults = false;
+
+  recognition.onresult = function (event) {
+    document.getElementById("msg").value =
+      event.results[0][0].transcript;
+    send();
+  };
+
+  recognition.start();
+}
