@@ -134,7 +134,10 @@ const data=await res.json();
 
 chat.innerHTML+=`<div class="bot"><span>${data.reply || data.error || "No response"}</span></div>`;
 chat.scrollTop=chat.scrollHeight;
-
+const speech = new SpeechSynthesisUtterance(data.reply);
+speech.lang = "en-US";
+speech.rate = 1;
+speechSynthesis.speak(speech);
 }catch(err){
 
 chat.innerHTML+=`<div class="bot"><span>❌ Server Error</span></div>`;
