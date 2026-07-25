@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SUPER BEEM AI</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -23,9 +25,9 @@ height:100vh;
 
 header{
 background:#ff9800;
-padding:18px;
+padding:15px;
 text-align:center;
-font-size:26px;
+font-size:24px;
 font-weight:bold;
 }
 
@@ -36,27 +38,27 @@ padding:15px;
 }
 
 .user{
-text-align:right;
+display:flex;
+justify-content:flex-end;
 margin:10px 0;
 }
 
 .user span{
-display:inline-block;
-background:#2196f3;
-padding:10px 14px;
+background:#2196F3;
+padding:12px;
 border-radius:12px;
 max-width:80%;
 }
 
 .bot{
-text-align:left;
+display:flex;
+justify-content:flex-start;
 margin:10px 0;
 }
 
 .bot span{
-display:inline-block;
 background:#333;
-padding:10px 14px;
+padding:12px;
 border-radius:12px;
 max-width:80%;
 }
@@ -86,7 +88,9 @@ font-size:16px;
 border-radius:8px;
 cursor:pointer;
 }
+
 </style>
+
 </head>
 
 <body>
@@ -96,31 +100,73 @@ cursor:pointer;
 <div id="chat"></div>
 
 <div class="bottom">
-<input id="msg" placeholder="Ask anything...">
+
+<input
+id="msg"
+placeholder="Ask anything...">
+
 <button onclick="startVoice()">🎤</button>
+
 <button onclick="send()">Send</button>
+
 </div>
 
-<script>
+<script> 
+function startVoice(){
 
-const SERVER="https://super-beem-server.onrender.com/chat";
+const recognition =
+new (window.SpeechRecognition ||
+window.webkitSpeechRecognition)();
 
-const chat=document.getElementById("chat");
-const input=document.getElementById("msg");
-    async function send(){
+recognition.lang = "en-US";
+// తెలుగు కావాలంటే:
+// recognition.lang = "te-IN";
 
-const message=input.value.trim();
+recognition.start();
+
+recognition.onresult = function(event){
+
+document.getElementById("msg").value =
+event.results[0][0].transcript;
+
+send();
+
+};
+
+recognition.onerror = function(){
+
+alert("Microphone permission denied or browser doesn't support voice.");
+
+};
+
+}
+
+const SERVER =
+"https://super-beem-server.onrender.com/chat";
+
+const chat =
+document.getElementById("chat");
+
+const input =
+document.getElementById("msg");
+
+async function send(){
+
+const message =
+input.value.trim();
 
 if(message==="") return;
 
-chat.innerHTML+=`<div class="user"><span>${message}</span></div>`;
-chat.scrollTop=chat.scrollHeight;
+chat.innerHTML +=
+`<div class="user"><span>${message}</span></div>`;
 
-input.value="";
+chat.scrollTop = chat.scrollHeight;
+
+input.value = "";
 
 try{
 
-const res=await fetch(SERVER,{
+const res = await fetch(SERVER,{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -130,24 +176,73 @@ message:message
 })
 });
 
-const data=await res.json();
+const data = await res.json();
+    chat.innerHTML +=
+`<div class="bot"><span>${data.reply}</span></div>`;
 
-chat.innerHTML+=`<div class="bot"><span>${data.reply || data.error || "No response"}</span></div>`;
-chat.scrollTop=chat.scrollHeight;
-const speech = new SpeechSynthesisUtterance(data.reply);
+chat.scrollTop = chat.scrollHeight;
+
+// AI Voice Reply
+const speech =
+new SpeechSynthesisUtterance(data.reply);
+
 speech.lang = "en-US";
 speech.rate = 1;
+speech.pitch = 1;
+
+speechSynthesis.cancel();
 speechSynthesis.speak(speech);
+
 }catch(err){
 
-chat.innerHTML+=`<div class="bot"><span>❌ Server Error</span></div>`;
-chat.scrollTop=chat.scrollHeight;
+chat.innerHTML +=
+`<div class="bot"><span>❌ ${err.message}</span></div>`;
+
+chat.scrollTop = chat.scrollHeight;
 
 }
 
 }
 
+input.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+send();
+}
+
+});
+```javascript
+function startVoice(){
+
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+if(!SpeechRecognition){
+alert("Voice recognition is not supported in this browser.");
+return;
+}
+
+const recognition = new SpeechRecognition();
+
+recognition.lang = "en-US"; // Telugu అయితే "te-IN"
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+recognition.onresult = function(event){
+input.value = event.results[0][0].transcript;
+send();
+};
+
+recognition.onerror = function(event){
+alert("Voice Error: " + event.error);
+};
+
+recognition.start();
+
+}
 </script>
 
 </body>
 </html>
+```    
