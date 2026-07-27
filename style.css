@@ -35,13 +35,13 @@ gap:10px;
 }
 
 .top-buttons button{
-width:42px;
-height:42px;
+width:45px;
+height:45px;
 border:none;
 border-radius:50%;
 background:#2b3040;
 color:white;
-font-size:18px;
+font-size:20px;
 cursor:pointer;
 }
 
@@ -97,8 +97,12 @@ animation-delay:.4s;
 }
 
 @keyframes blink{
-0%,100%{opacity:.3;}
-50%{opacity:1;}
+0%,100%{
+opacity:.3;
+}
+50%{
+opacity:1;
+}
 }
 
 .bottom{
@@ -120,25 +124,25 @@ font-size:16px;
 
 #voiceBtn,
 #send{
-width:52px;
-height:52px;
+width:56px;
+height:56px;
 border:none;
-border-radius:12px;
-cursor:pointer;
-font-size:22px;
-font-weight:bold;
+border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
+font-size:24px;
+cursor:pointer;
+flex-shrink:0;
 }
 
 #voiceBtn{
-background:#444b5f;
+background:#2b3040;
 color:white;
 }
 
 #voiceBtn:hover{
-background:#5b6378;
+background:#3c4256;
 }
 
 #send{
@@ -147,6 +151,5 @@ color:black;
 }
 
 #send:hover{
-background:#00bde6;
-    }
-
+background:#00b8dd;
+}
