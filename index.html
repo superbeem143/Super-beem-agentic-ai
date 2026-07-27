@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SUPER BEEM AI</title>
 
 <link rel="stylesheet" href="style.css">
@@ -12,20 +15,55 @@
 <body>
 
 <header>
+
+<div class="logo">
 🤖 SUPER BEEM AI
+</div>
+
+<div class="top-buttons">
+
+<button id="clearBtn">
+🗑️
+</button>
+
+<button id="voiceBtn">
+🎤
+</button>
+
+</div>
+
 </header>
 
-<div id="chat"></div>
+<div id="chat">
+
+<div class="bot">
+
+👋 Hello! I'm SUPER BEEM AI.
+How can I help you today?
+
+</div>
+
+</div>
+
+<div id="typing" class="typing">
+
+<span></span>
+<span></span>
+<span></span>
+
+</div>
 
 <div class="bottom">
 
 <input
 type="text"
 id="msg"
-placeholder="Ask anything...">
+placeholder="Type your message...">
 
 <button id="send">
-Send
+
+➤
+
 </button>
 
 </div>
@@ -33,4 +71,5 @@ Send
 <script src="script.js"></script>
 
 </body>
+
 </html>
