@@ -85,3 +85,46 @@ async function sendMessage(){
     chat.scrollTop = chat.scrollHeight;
 
 }
+const voiceBtn = document.getElementById("voiceBtn");
+
+if (voiceBtn) {
+    voiceBtn.addEventListener("click", startVoice);
+}
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Voice recognition is not supported on this browser.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-US";   // Telugu కోసం "te-IN"
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function () {
+        voiceBtn.innerHTML = "🎙️";
+    };
+
+    recognition.onend = function () {
+        voiceBtn.innerHTML = "🎤";
+    };
+
+    recognition.onresult = function (event) {
+        input.value = event.results[0][0].transcript;
+        sendMessage();
+    };
+
+    recognition.onerror = function (event) {
+        alert("Voice Error: " + event.error);
+        voiceBtn.innerHTML = "🎤";
+    };
+
+    recognition.start();
+}
