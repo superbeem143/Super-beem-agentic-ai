@@ -128,3 +128,8 @@ function startVoice() {
 
     recognition.start();
 }
+console.log("Script Loaded");
+
+voiceBtn.addEventListener("click", () => {
+    alert("Voice button clicked");
+});
