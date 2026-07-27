@@ -163,3 +163,27 @@ function startVoice() {
 
     recognition.start();
 }    
+// Stop AI voice when user starts typing
+input.addEventListener("input", () => {
+    if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+    }
+});
+
+// Stop AI voice when page closes
+window.addEventListener("beforeunload", () => {
+    if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+    }
+});
+
+// Auto scroll whenever new messages are added
+const observer = new MutationObserver(() => {
+    chat.scrollTop = chat.scrollHeight;
+});
+
+observer.observe(chat, {
+    childList: true
+});
+
+console.log("SUPER BEEM AI Loaded Successfully");
