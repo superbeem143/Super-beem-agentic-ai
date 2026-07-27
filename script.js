@@ -1,63 +1,29 @@
-const sendBtn = document.getElementById("sendBtn");
-const prompt = document.getElementById("prompt");
-const chatBox = document.getElementById("chatBox");
-
-sendBtn.addEventListener("click", () => {
-
-    const text = prompt.value.trim();
-
-    if(text === "") return;
-
-    chatBox.innerHTML += `
-        <div class="user">
-            🧑 ${text}
-        </div>
-    `;
-
-    setTimeout(() => {
-
-        chatBox.innerHTML += `
-            <div class="bot">
-                🤖 SUPER BEEM is thinking...
-            </div>
-        `;
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-    },500);
-
-    prompt.value="";
-
-});
-const response = document.getElementById("response");
-
-sendBtn.addEventListener("click", () => {
-
-    const text = prompt.value;
-
-    response.innerHTML =
-        "🤖 SUPER BEEM : I received your command.<br><br>" +
-        "Command : <b>" + text + "</b><br><br>" +
-        "Status : Processing...";
-});
-function startVoice() {
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    alert("Voice recognition is not supported in this browser.");
-    return;
+const SERVER="https://super-beem-server.onrender.com/chat";
+const chat=document.getElementById("chat");
+const msg=document.getElementById("msg");
+document.getElementById("send").onclick=send;
+msg.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+async function send(){
+ const text=msg.value.trim();
+ if(!text)return;
+ chat.innerHTML+=`<div class="user">${text}</div>`;
+ msg.value="";
+ const t=document.createElement("div");
+ t.className="bot typing";
+ t.textContent="SUPER BEEM AI is typing...";
+ chat.appendChild(t);
+ chat.scrollTop=chat.scrollHeight;
+ try{
+  const r=await fetch(SERVER,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text})});
+  const d=await r.json();
+  t.className="bot";
+  t.textContent=d.reply||"No reply";
+  if("speechSynthesis" in window){
+    speechSynthesis.cancel();
+    speechSynthesis.speak(new SpeechSynthesisUtterance(t.textContent));
   }
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = "en-US"; // Telugu కోసం "te-IN"
-  recognition.interimResults = false;
-
-  recognition.onresult = function (event) {
-    document.getElementById("msg").value =
-      event.results[0][0].transcript;
-    send();
-  };
-
-  recognition.start();
+ }catch(e){
+  t.className="bot";
+  t.textContent="Error: "+e.message;
+ }
 }
