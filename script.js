@@ -1,3 +1,5 @@
+alert("SCRIPT START");
+
 const SERVER = "https://super-beem-server.onrender.com/chat";
 
 const chat = document.getElementById("chat");
