@@ -117,4 +117,49 @@ async function sendMessage() {
     chat.scrollTop = chat.scrollHeight;
 
 }        
-    
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Voice recognition is not supported on this browser.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "te-IN";   // Telugu + English
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function () {
+        voiceBtn.innerHTML = "🎙️";
+        voiceBtn.disabled = true;
+    };
+
+    recognition.onend = function () {
+        voiceBtn.innerHTML = "🎤";
+        voiceBtn.disabled = false;
+    };
+
+    recognition.onresult = function (event) {
+        input.value = event.results[0][0].transcript;
+        sendMessage();
+    };
+
+    recognition.onerror = function (event) {
+
+        console.log("Voice Error:", event.error);
+
+        if (event.error !== "no-speech") {
+            alert("Voice Error: " + event.error);
+        }
+
+        voiceBtn.innerHTML = "🎤";
+        voiceBtn.disabled = false;
+    };
+
+    recognition.start();
+}    
