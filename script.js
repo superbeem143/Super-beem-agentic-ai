@@ -1,67 +1,87 @@
 const SERVER = "https://super-beem-server.onrender.com/chat";
 
 const chat = document.getElementById("chat");
-const msg = document.getElementById("msg");
+const input = document.getElementById("msg");
 const sendBtn = document.getElementById("send");
+const clearBtn = document.getElementById("clearBtn");
+const typing = document.getElementById("typing");
 
 sendBtn.addEventListener("click", sendMessage);
 
-msg.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
+input.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
         sendMessage();
     }
 });
 
-async function sendMessage() {
+clearBtn.addEventListener("click", function(){
+    chat.innerHTML = `
+    <div class="bot">
+    👋 Hello! I'm SUPER BEEM AI.<br>
+    How can I help you today?
+    </div>`;
+});
 
-    const text = msg.value.trim();
+async function sendMessage(){
 
-    if (text === "") return;
+    const message = input.value.trim();
+
+    if(message==="") return;
 
     chat.innerHTML += `
-        <div class="user">${text}</div>
+    <div class="user">${message}</div>
     `;
 
-    msg.value = "";
+    input.value="";
+
+    typing.style.display="block";
+
     chat.scrollTop = chat.scrollHeight;
 
-    const loading = document.createElement("div");
-    loading.className = "bot";
-    loading.innerText = "🤖 Thinking...";
-    chat.appendChild(loading);
+    try{
 
-    try {
-
-        const response = await fetch(SERVER, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
+        const response = await fetch(SERVER,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
             },
-            body: JSON.stringify({
-                message: text
+            body:JSON.stringify({
+                message:message
             })
         });
 
         const data = await response.json();
 
-        loading.innerText = data.reply || "No response";
+        typing.style.display="none";
 
-        if ("speechSynthesis" in window) {
+        chat.innerHTML += `
+        <div class="bot">${data.reply}</div>
+        `;
+
+        if("speechSynthesis" in window){
+
             speechSynthesis.cancel();
 
             const speech = new SpeechSynthesisUtterance(data.reply);
-            speech.lang = "en-US";
-            speech.rate = 1;
-            speech.pitch = 1;
+
+            speech.lang="en-US";
 
             speechSynthesis.speak(speech);
+
         }
 
-    } catch (error) {
+    }catch(error){
 
-        loading.innerText = "❌ Error: " + error.message;
+        typing.style.display="none";
+
+        chat.innerHTML += `
+        <div class="bot">
+        ❌ ${error.message}
+        </div>
+        `;
 
     }
 
     chat.scrollTop = chat.scrollHeight;
+
 }
