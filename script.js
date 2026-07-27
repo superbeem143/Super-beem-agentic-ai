@@ -187,3 +187,4 @@ observer.observe(chat, {
 });
 
 console.log("SUPER BEEM AI Loaded Successfully");
+alert("SCRIPT LOADED");
